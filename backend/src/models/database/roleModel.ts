@@ -19,7 +19,6 @@ const PermissionSchema = new Schema<IPermission>({
 });
 
 const RoleSchema = new Schema<IRole>({
-	id: { type: String, required: true, unique: true },
 	name: { type: String, required: true },
 	permissions: { type: [PermissionSchema], required: true }
 });
