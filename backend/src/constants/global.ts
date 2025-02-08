@@ -16,6 +16,7 @@ const getEnv = (key: string, fallback?: string): string => {
 export const config = {
 	port: parseInt(getEnv('PORT', '3000'), 10),
 	environment: getEnv('NODE_ENV', 'development'),
+	allowedOrigins: getEnv('ALLOWED_ORIGINS', 'http://localhost:3000'),
 	mongo: {
 		uri: getEnv('MONGODB_URI'),
 		database: getEnv('MONGODB_DBNAME')

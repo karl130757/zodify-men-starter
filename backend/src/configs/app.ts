@@ -1,15 +1,11 @@
 import express from 'express';
 import routes from '../routes';
-import { config } from '../constants/global';
-import corsMiddleware from '../middlewares/corsMiddleware';
+import securityMiddleware from '../middlewares/securityMiddleware';
 import { errorHandlerMiddleware } from '../middlewares/errorMiddleware';
-import helmetConfig from '../configs/helmetConfig';
 
-const isProduction: boolean = config.environment === 'production';
 const app = express();
 
-app.use(corsMiddleware);
-app.use(helmetConfig(isProduction));
+app.use(securityMiddleware);
 
 app.use(express.json());
 
