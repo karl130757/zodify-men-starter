@@ -1,79 +1,83 @@
 import { User } from '../models/domain/user';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
+import { NotFoundError, BadRequestError } from '../utils/errors';
 
-export const getUsers = async (req: Request, res: Response): Promise<void> => {
+export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const users = await userService.getAllUsers();
 		res.status(200).json(users);
 	} catch (error) {
-		res.status(500).json({ error: 'Failed to retrieve users' });
+		next(error);
 	}
 };
 
-export const getUserById = async (req: Request, res: Response): Promise<void> => {
-	const { id } = req.params;
+export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const { id } = req.params;
+		if (!id) throw new BadRequestError('User ID is required');
+
 		const user = await userService.getUserById(id);
-		if (user) {
-			res.status(200).json(user);
-		} else {
-			res.status(404).json({ error: 'User not found' });
-		}
+		if (!user) throw new NotFoundError('User not found');
+
+		res.status(200).json(user);
 	} catch (error) {
-		res.status(500).json({ error: 'Failed to retrieve user' });
+		next(error);
 	}
 };
 
-export const getUserByToken = async (req: Request, res: Response): Promise<void> => {
-	const { id } = (req as any).user;
-
+export const getUserByToken = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const { id } = (req as any).user;
+		if (!id) throw new BadRequestError('User ID is missing from token');
+
 		const user = await userService.getUserById(id);
-		if (user) {
-			res.status(200).json(user);
-		} else {
-			res.status(404).json({ error: 'User not found' });
-		}
+		if (!user) throw new NotFoundError('User not found');
+
+		res.status(200).json(user);
 	} catch (error) {
-		console.log(error);
-		res.status(500).json({ error: 'Failed to retrieve user' });
+		next(error);
 	}
 };
 
-export const createUser = async (req: Request, res: Response): Promise<void> => {
-	const { username, email, password } = req.body;
-	const userToCreate: User = { username, email, password };
+export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const { username, email, password } = req.body;
+		if (!username || !email || !password) throw new BadRequestError('All fields are required');
+
+		const userToCreate: User = { username, email, password };
 		const newUser = await userService.createUser(userToCreate);
+
 		res.status(201).json(newUser);
 	} catch (error) {
-		res.status(400).json({ error: 'Failed to create user' });
+		next(error);
 	}
 };
 
-export const updateUser = async (req: Request, res: Response): Promise<void> => {
-	const { id } = req.params;
-	const { username, email, password } = req.body;
-	const dataToUpdate: User = { username, email, password };
+export const updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const { id } = req.params;
+		const { username, email, password } = req.body;
+		if (!id) throw new BadRequestError('User ID is required');
+
+		const dataToUpdate: User = { username, email, password };
 		const updatedUser = await userService.updateUser(id, dataToUpdate);
-		if (updatedUser) {
-			res.status(200).json(updatedUser);
-		} else {
-			res.status(404).json({ error: 'User not found' });
-		}
+		if (!updatedUser) throw new NotFoundError('User not found');
+
+		res.status(200).json(updatedUser);
 	} catch (error) {
-		res.status(400).json({ error: 'Failed to update user' });
+		next(error);
 	}
 };
 
-export const deleteUser = async (req: Request, res: Response): Promise<void> => {
-	const { id } = req.params;
+export const deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		const { id } = req.params;
+		if (!id) throw new BadRequestError('User ID is required');
+
 		const message = await userService.deleteUser(id);
 		res.status(200).json({ message });
 	} catch (error) {
-		res.status(500).json({ error: 'Failed to delete user' });
+		next(error);
 	}
 };
