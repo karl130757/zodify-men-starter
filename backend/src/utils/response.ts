@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 export const successResponse = (res: Response, data: any, message = 'Request successful', statusCode = 200, metadata: any = null) => {
 	return res.status(statusCode).json({
-		status: 'success',
+		success: true,
 		message,
 		data,
 		metadata: metadata || undefined, // Optional metadata (e.g., pagination info)
