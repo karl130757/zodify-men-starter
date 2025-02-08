@@ -2,11 +2,12 @@ import { User } from '../models/domain/user';
 import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 import { NotFoundError, BadRequestError } from '../utils/errors';
+import { successResponse } from '../utils/response';
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const users = await userService.getAllUsers();
-		res.status(200).json(users);
+		successResponse(res, users, 'Users retrieved successfully', 200, { total: users.length });
 	} catch (error) {
 		next(error);
 	}
@@ -20,7 +21,7 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 		const user = await userService.getUserById(id);
 		if (!user) throw new NotFoundError('User not found');
 
-		res.status(200).json(user);
+		successResponse(res, user, 'User retrieved successfully');
 	} catch (error) {
 		next(error);
 	}
@@ -34,7 +35,7 @@ export const getUserByToken = async (req: Request, res: Response, next: NextFunc
 		const user = await userService.getUserById(id);
 		if (!user) throw new NotFoundError('User not found');
 
-		res.status(200).json(user);
+		successResponse(res, user, 'User retrieved successfully');
 	} catch (error) {
 		next(error);
 	}
@@ -48,7 +49,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 		const userToCreate: User = { username, email, password };
 		const newUser = await userService.createUser(userToCreate);
 
-		res.status(201).json(newUser);
+		successResponse(res, newUser, 'User created successfully', 201);
 	} catch (error) {
 		next(error);
 	}
@@ -64,7 +65,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 		const updatedUser = await userService.updateUser(id, dataToUpdate);
 		if (!updatedUser) throw new NotFoundError('User not found');
 
-		res.status(200).json(updatedUser);
+		successResponse(res, updatedUser, 'User updated successfully');
 	} catch (error) {
 		next(error);
 	}
@@ -76,7 +77,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 		if (!id) throw new BadRequestError('User ID is required');
 
 		const message = await userService.deleteUser(id);
-		res.status(200).json({ message });
+		successResponse(res, { message }, 'User deleted successfully');
 	} catch (error) {
 		next(error);
 	}
