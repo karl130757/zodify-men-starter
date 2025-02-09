@@ -15,12 +15,24 @@ export class UserRepository implements UserRepositoryInterface {
 	}
 
 	async findById(id: string): Promise<User | null> {
-		const user = await UserModel.findById(id).exec();
+		const user = await UserModel.findById(id)
+			.populate({
+				path: 'role',
+				select: 'id name permissions'
+			})
+			.lean()
+			.exec();
 		return user ? mapToDomain(user) : null;
 	}
 
 	async findByEmail(email: string): Promise<User | null> {
-		const user = await UserModel.findOne({ email }).exec();
+		const user = await UserModel.findOne({ email })
+			.populate({
+				path: 'role',
+				select: 'id name permissions'
+			})
+			.lean()
+			.exec();
 		return user ? mapToDomain(user) : null;
 	}
 
