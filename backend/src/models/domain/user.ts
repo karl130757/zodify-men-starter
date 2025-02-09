@@ -25,7 +25,7 @@ const mapToDomain = (user: any): z.infer<typeof UserSchema> => ({
 	username: user.username,
 	email: user.email,
 	password: user.password,
-	role: user.role.toString(),
+	role: user.role,
 	createdAt: user.createdAt || new Date(),
 	updatedAt: user.updatedAt || new Date()
 });

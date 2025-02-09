@@ -1,10 +1,17 @@
 import { User, mapToDomain } from '../models/domain/user';
 import { UserRepositoryInterface } from '../interfaces/userRepositoryInterface';
-import { UserModel } from '../models/database/userModel';
+import { UserModel } from '../models/database';
 
 export class UserRepository implements UserRepositoryInterface {
 	async findAll(): Promise<User[]> {
-		return (await UserModel.find().lean()).map(mapToDomain);
+		return (
+			await UserModel.find()
+				.populate({
+					path: 'role',
+					select: 'id name permissions'
+				})
+				.lean()
+		).map(mapToDomain);
 	}
 
 	async findById(id: string): Promise<User | null> {

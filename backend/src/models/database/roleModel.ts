@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 
 interface IPermission {
 	domainName: string;
@@ -6,10 +6,12 @@ interface IPermission {
 	fields: string[];
 }
 
-interface IRole extends Document {
+export interface IRole extends Document {
 	id: string;
 	name: string;
 	permissions: IPermission[];
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 const PermissionSchema = new Schema<IPermission>({
@@ -18,9 +20,23 @@ const PermissionSchema = new Schema<IPermission>({
 	fields: { type: [String], required: true }
 });
 
-const RoleSchema = new Schema<IRole>({
-	name: { type: String, required: true },
-	permissions: { type: [PermissionSchema], required: true }
-});
+const RoleSchema: Schema = new Schema(
+	{
+		name: { type: String, required: true },
+		permissions: { type: [PermissionSchema], required: true }
+	},
+	{
+		toJSON: {
+			virtuals: true,
+			transform: function (doc, ret) {
+				ret.id = ret._id;
+				delete ret._id;
+				delete ret.__v;
+				return ret;
+			}
+		},
+		timestamps: true
+	}
+);
 
-export const RoleModel: Model<IRole> = mongoose.model<IRole>('Role', RoleSchema);
+export const RoleModel = mongoose.model<IRole>('Role', RoleSchema);
