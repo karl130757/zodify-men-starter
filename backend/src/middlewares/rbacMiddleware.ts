@@ -21,7 +21,6 @@ export const rbacMiddleware = (domain: string) => {
 		const role: Role = { ...user.role };
 
 		const action = `${methodToAction[req.method]}:${domain}`;
-
 		const permission = role.permissions.find((perm) => perm.domainName === domain);
 
 		if (!permission) {

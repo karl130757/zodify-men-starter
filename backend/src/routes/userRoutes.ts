@@ -7,10 +7,10 @@ import { rbacMiddleware } from '../middlewares/rbacMiddleware';
 
 const router = Router();
 
-router.get('/', getUsers);
-router.post('/', validateRequest(UserSchema), rbacMiddleware(domainName), createUser);
-router.get('/:id', authenticateRequest, getUserById);
-router.patch('/:id', authenticateRequest, updateUser);
-router.delete('/:id', authenticateRequest, deleteUser);
+router.get('/', authenticateRequest, rbacMiddleware(domainName), getUsers);
+router.post('/', validateRequest(UserSchema), authenticateRequest, rbacMiddleware(domainName), createUser);
+router.get('/:id', authenticateRequest, rbacMiddleware(domainName), getUserById);
+router.patch('/:id', validateRequest(UserSchema), authenticateRequest, rbacMiddleware(domainName), updateUser);
+router.delete('/:id', authenticateRequest, rbacMiddleware(domainName), deleteUser);
 
 export default router;
