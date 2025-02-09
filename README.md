@@ -48,7 +48,7 @@ This configuration defines role-based permissions within the system. Each role c
 -   Each role has a `name` and a set of `permissions`.
 -   `permissions` define the domain (resource) a role can interact with, the allowed actions, and the fields the role can view.
 -   **Actions should follow the format:** `action:domainName` (e.g., `create:user`, `read:order`).
--   **Fields should follow the format:** `view:domainName` (e.g., `view:email`, `view:username`).
+-   **Fields should follow the format:** `view:fieldName` (e.g., `view:email`, `view:username`).
 
 **Roles:**
 
