@@ -33,6 +33,9 @@ The **Zod Mongoose Express Node Backend Template** is a robust and scalable back
     -   **Constants Management**:
         -   A `constants` folder contains application-wide constant values.
         -   The `global.ts` file inside the `constants` folder is the central location for defining and retrieving global constants.
+    -   **Error & Response Handling**:
+        -   A `global error middleware` handler is enforced to ensure consistent error handling throughout the application..
+        -   A unified `response handler` is implemented to standardize API responses for better consistency and maintainability.
 
 ## RBAC Configuration
 
