@@ -3,6 +3,10 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from '../services/userService';
 import { NotFoundError, BadRequestError } from '../utils/errors';
 import { successResponse } from '../utils/response';
+import { config } from '../constants/global';
+import PasswordUtility from '../utils/password';
+
+const passwordUtility = new PasswordUtility(config.bcrypt.rounds);
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -43,10 +47,11 @@ export const getUserByToken = async (req: Request, res: Response, next: NextFunc
 
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		const { username, email, password } = req.body;
-		if (!username || !email || !password) throw new BadRequestError('All fields are required');
+		const { username, email, password, role } = req.body;
+		if (!username || !email || !password || !role) throw new BadRequestError('All fields are required');
 
-		const userToCreate: User = { username, email, password };
+		const hashedPassword = await passwordUtility.hashPassword(password);
+		const userToCreate: User = { username, email, password: hashedPassword, role };
 		const newUser = await userService.createUser(userToCreate);
 
 		successResponse(res, newUser, 'User created successfully', 201);

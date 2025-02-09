@@ -20,6 +20,9 @@ export const config = {
 	jwt: {
 		secret: getEnv('JWT_SECRET')
 	},
+	bcrypt: {
+		rounds: getEnv('BCRYPT_HASHROUND')
+	},
 	mongo: {
 		uri: getEnv('MONGODB_URI'),
 		database: getEnv('MONGODB_DBNAME')

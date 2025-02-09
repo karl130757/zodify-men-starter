@@ -5,7 +5,7 @@ export interface User extends Document {
 	username: string;
 	email: string;
 	password: string;
-	roleId: ObjectId;
+	role: ObjectId;
 	createdAt: Date;
 	updatedAt: Date;
 }
@@ -15,7 +15,7 @@ const UserSchema: Schema = new Schema(
 		username: { type: String, required: true },
 		email: { type: String, required: true },
 		password: { type: String, required: true },
-		roleId: { type: Schema.Types.ObjectId, ref: 'Role', required: true }
+		role: { type: Schema.Types.ObjectId, ref: 'Role', required: true }
 	},
 	{
 		toJSON: {

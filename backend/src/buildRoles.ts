@@ -37,7 +37,7 @@ const roleSetup = [
 			{
 				domainName: 'user',
 				actions: ['create:user', 'read:user', 'update:user', 'delete:user', 'search:user'],
-				fields: ['view:id', 'view:username', 'view:email', 'view:password', 'view:roleId', 'view:createdAt', 'view:updatedAt']
+				fields: ['view:id', 'view:username', 'view:email', 'view:password', 'view:role', 'view:createdAt', 'view:updatedAt']
 			}
 		]
 	},
@@ -47,7 +47,7 @@ const roleSetup = [
 			{
 				domainName: 'user',
 				actions: ['read:user', 'update:user', 'search:user'],
-				fields: ['view:id', 'view:username', 'view:email', 'view:roleId', 'view:createdAt', 'view:updatedAt']
+				fields: ['view:id', 'view:username', 'view:email', 'view:role', 'view:createdAt', 'view:updatedAt']
 			}
 		]
 	}
@@ -64,23 +64,23 @@ const buildRoles = async () => {
 		});
 		console.log('✅ Successfully connected to MongoDB');
 
-		// Clear existing data (optional)
-		console.log('🗑️  Clearing existing roles...');
-		await RoleModel.deleteMany({});
-		console.log('✅ Existing roles cleared');
-
-		// Insert new seed data
-		console.log('🌱 Seeding new roles...');
-		await RoleModel.insertMany(roleSetup);
-		console.log('✅ Role seeding completed successfully');
+		// Update existing roles or create if not exists
+		console.log('🔄 Updating/Inserting roles...');
+		for (const role of roleSetup) {
+			await RoleModel.findOneAndUpdate(
+				{ name: role.name }, // Search for an existing role by name
+				{ $set: { permissions: role.permissions } }, // Update permissions
+				{ upsert: true, new: true } // Create if not exists & return new doc
+			);
+		}
+		console.log('✅ Role update/creation completed successfully');
 	} catch (error) {
-		console.error('❌ Error seeding database:', error);
+		console.error('❌ Error updating database:', error);
 	} finally {
 		console.log('🔌 Closing database connection...');
 		await mongoose.connection.close();
 		console.log('✅ Database connection closed');
 	}
 };
-
 // Execute the script
 buildRoles();

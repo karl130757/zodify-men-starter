@@ -6,11 +6,12 @@ import bcrypt from 'bcrypt';
 class PasswordUtility {
 	private saltRounds: number;
 
-	constructor(saltRounds: number = 10) {
-		if (typeof saltRounds !== 'number' || saltRounds <= 0) {
+	constructor(saltRounds: string = '10') {
+		const parsedRounds = parseInt(saltRounds, 10);
+		if (isNaN(parsedRounds) || parsedRounds <= 0) {
 			throw new Error('Salt rounds must be a positive number.');
 		}
-		this.saltRounds = saltRounds;
+		this.saltRounds = parsedRounds;
 	}
 
 	/**
