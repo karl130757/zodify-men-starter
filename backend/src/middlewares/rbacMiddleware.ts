@@ -31,6 +31,8 @@ export const rbacMiddleware = (domain: string) => {
 			throw new ForbiddenError(`Access Denied: Cannot perform '${action}' on ${domain}`);
 		}
 
+		(req as any).allowedFields = permission.fields.map((field) => field.replace('view:', ''));
+
 		next();
 	};
 };

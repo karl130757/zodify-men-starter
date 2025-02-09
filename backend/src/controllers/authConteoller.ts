@@ -26,7 +26,7 @@ export const login = async (req: Request, res: Response, next: NextFunction): Pr
 
 		const token: string = tokenizer.generateToken(user);
 		const refreshToken: string = tokenizer.generateToken(user, { expiresIn: '30d' });
-		successResponse(res, { token, refreshToken }, 'User authenticated successfully');
+		successResponse(req, res, { token, refreshToken }, 'User authenticated successfully');
 	} catch (error) {
 		next(error);
 	}
@@ -40,7 +40,7 @@ export const regenerateToken = async (req: Request, res: Response, next: NextFun
 			throw new BadRequestError('Unable to regenerate the token');
 		}
 		const token: string = tokenizer.generateToken({ ...user });
-		successResponse(res, { token }, 'token regenerated successfully');
+		successResponse(req, res, { token }, 'token regenerated successfully');
 	} catch (error) {
 		next(error);
 	}

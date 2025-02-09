@@ -36,7 +36,7 @@ const roleSetup = [
 		permissions: [
 			{
 				domainName: 'user',
-				actions: ['create:user', 'read:user', 'update:user', 'delete:user', 'search:user'],
+				actions: ['create:user', 'read:user', 'update:user', 'delete:user'],
 				fields: ['view:id', 'view:username', 'view:email', 'view:password', 'view:role', 'view:createdAt', 'view:updatedAt']
 			}
 		]
@@ -46,8 +46,8 @@ const roleSetup = [
 		permissions: [
 			{
 				domainName: 'user',
-				actions: ['read:user', 'update:user', 'search:user'],
-				fields: ['view:id', 'view:username', 'view:email', 'view:role', 'view:createdAt', 'view:updatedAt']
+				actions: ['read:user', 'update:user'],
+				fields: ['view:id', 'view:username', 'view:email', 'view:createdAt', 'view:updatedAt']
 			}
 		]
 	}
