@@ -170,7 +170,7 @@ Modify these values according to your project requirements.
     ```
 2. Navigate to the project folder:
     ```sh
-    cd zod-mongoose-express-template
+    cd zodify-men-starter/backend
     ```
 3. Install dependencies:
     ```sh
